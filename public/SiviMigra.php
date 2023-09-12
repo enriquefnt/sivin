@@ -70,7 +70,7 @@ $migrator = new DatabaseMigrator($origenDB, $destinoDB);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
 ?>
 
-
+/*
 
 <?php */
 require_once('DataTables.php');
@@ -84,7 +84,7 @@ class DatabaseMigrator {
         $this->destinoDB = $destinoDB;
     }
 
-    public function migrateTable($origenTable, $destinoTable, $batchSize = 500) {
+    public function migrateTable($origenTable, $destinoTable, $batchSize = 200) {
         $totalRecords = $this->origenDB->total($origenTable);
         $offset = 0;
 
@@ -140,6 +140,18 @@ class DatabaseMigrator {
 
         return $mappedRow;
     }
+
+    private function separar_nombres($cadena) {
+        $nombres = explode(" ", $cadena);
+        $apellidos = array_slice($nombres, 1);
+        $apellidos = implode(" ", $apellidos);
+        return [
+          "nombre" => $nombres[0],
+          "apellidos" => $apellidos,
+        ];
+      }
+
+
 }
 
 // Uso de la clase
