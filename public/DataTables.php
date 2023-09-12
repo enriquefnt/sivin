@@ -102,6 +102,23 @@ public function findAll()
 	$this->table);
 	return $result->fetchAll();
 	}
+     
+	// Leer un lote de registros
+	
+	public function findBatch($batchSize, $offset) {
+		$sql = 'SELECT * FROM ' . $this->table . '` LIMIT :offset, :batchSize';
+		$parameters =[
+			'offset' => $offset,
+			'batchSize' => $batchSize
+		];
+	
+		$result = $this->query($sql, $parameters);
+		return $result->fetchAll();
+	}
+	
+
+	
+
 private function processDates($fields)
 	{foreach ($fields as $key => $value) {
 	if ($value instanceof \DateTime) {
