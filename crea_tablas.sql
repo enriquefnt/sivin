@@ -116,7 +116,6 @@ CREATE TABLE `Registro` (
 
 
 
-
 CREATE TABLE `SecUser` (
   `SecUserId` smallint NOT NULL AUTO_INCREMENT,
   `SecUserName` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
@@ -126,13 +125,13 @@ CREATE TABLE `SecUser` (
   `SecUserKey` varchar(32) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `SecUserUsuBaja` mediumint DEFAULT NULL,
   PRIMARY KEY (`SecUserId`),
-  UNIQUE KEY `USUARIOUNICO` (`SecUserName`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-SELECT * FROM sivinsalta.SecUser;
+  UNIQUE KEY `USUARIOUNICO` (`SecUserName`) )
+ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET utf8mb3 COLLATE=utf8_general_ci;
 
-SELECT * FROM sivinsalta.SecUser;CREATE TABLE `SecRole` (
+
+CREATE TABLE `SecRole` (
   `SecRoleId` smallint NOT NULL AUTO_INCREMENT,
   `SecRoleName` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `SecRoleDescription` varchar(120) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  PRIMARY KEY (`SecRoleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`SecRoleId`) )
+ ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET utf8mb3 COLLATE=utf8_general_ci;
