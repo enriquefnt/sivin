@@ -4,18 +4,36 @@ require_once('DataTables.php');
 class DatabaseMigrator {
     private $origenDB;
     private $destinoDB;
+    private $domicilio;
     
     public function __construct($origenDB, $destinoDB) {
         $this->origenDB = $origenDB;
         $this->destinoDB = $destinoDB;
+        $this->domicilio = $domicilio;
     }
 
     public function migrateTable($origenTable, $destinoTable) {
         $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
         $totalRecords = $this->origenDB->total($origenTable);
+        $offset = 0;
         foreach ($origenData as $row) {
             $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
             $this->destinoDB->save($mappedRow); // Insertar en tabla destino
+            $offset += $offset;
+
+// Calcular el porcentaje de progreso
+            $progress = ($offset / $totalRecords) * 100;
+
+            // Salida HTML para mostrar el progreso
+            echo('<p>Progreso: ' . number_format($progress, 2) . '%</p>');
+            
+            // Flushear el búfer de salida para enviar la información al navegador inmediatamente
+            ob_flush();
+            flush();
+
+            // Pausa de 1 segundo para controlar la velocidad de actualización
+            sleep(1);
+
         }
     }
 
@@ -40,8 +58,8 @@ class DatabaseMigrator {
             'RegistroUsuCarga' => $origenRow['UsuId'],
             'RegistroFchIns' => 'NULL',
             'MotivoCargaId' => 'NULL',
-            'RegistroApellidos' => $apenom['nombres'],
-            'RegistroNombres' => $apenom['apellidos'],
+            'RegistroApellidos' => $apenom['apellido'],
+            'RegistroNombres' => $apenom['nombres'],
             'RegistroEdad' => 'NULL',
             'RegistroAsisSocial' => 'NULL',
             'RegistroEstabId' => 'NULL',
@@ -62,12 +80,12 @@ class DatabaseMigrator {
     }
 
     private function separar_nombres($cadena) {
-        $nombres = explode(" ", $cadena);
-        $apellidos = array_slice($nombres, 1);
-        $apellidos = implode(" ", $apellidos);
+        $apenom_array = explode(" ", $cadena);
+        $nombres = array_slice($apenom_array, 1);
+        $nombre = implode(" ", $nombres);
         return [
-          "nombre" => $nombres[0],
-          "apellidos" => $apellidos,
+          "apellido" => $apenom_array[0],
+          "nombres" => $nombre,
         ];
       }
 
@@ -84,6 +102,7 @@ $pdoD = new PDO('mysql:host=212.1.210.73;dbname=saltaped_sivinsalta; charset=utf
 
 $origenDB = new DataTables($pdoO, 'NIÑOS', 'IdNiño');
 $destinoDB = new DataTables($pdoD, 'Registro', 'RegistroId');
+$domicilio = new DataTables($pdoO, 'NIÑORESIDENCIA', 'IdResi');//ResiNiño
 
 $migrator = new DatabaseMigrator($origenDB, $destinoDB);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
