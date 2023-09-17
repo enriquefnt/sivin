@@ -1,4 +1,4 @@
-<?php /*
+<?php 
 require_once('DataTables.php');
 
 class DatabaseMigrator {
@@ -12,16 +12,19 @@ class DatabaseMigrator {
 
     public function migrateTable($origenTable, $destinoTable) {
         $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
-
+        $totalRecords = $this->origenDB->total($origenTable);
         foreach ($origenData as $row) {
             $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
-            $this->destinoDB->save($destinoTable, $mappedRow); // Insertar en tabla destino
+            $this->destinoDB->save($mappedRow); // Insertar en tabla destino
         }
     }
 
     private function mapColumns($origenRow) {
         // Aquí defines el mapeo de nombres de columnas entre las tablas origen y destino.
         // Por ejemplo, si la tabla origen tiene 'nombre' y la tabla destino espera 'nombre_completo':
+        if ( $origenRow['Sexo']=="Femenino"){$origenRow['Sexo']=2;} else{$origenRow['Sexo']=1;};
+        $apenom = $this->separar_nombres($origenRow['ApeNom']);
+
         $mappedRow = array(
             'RegistroId' => $origenRow['IdNiño'],
             'RegistroAoResidId' => $origenRow['Aoresi'],
@@ -37,8 +40,8 @@ class DatabaseMigrator {
             'RegistroUsuCarga' => $origenRow['UsuId'],
             'RegistroFchIns' => 'NULL',
             'MotivoCargaId' => 'NULL',
-            'RegistroApellidos' => 'NULL',
-            'RegistroNombres' => 'NULL',
+            'RegistroApellidos' => $apenom['nombres'],
+            'RegistroNombres' => $apenom['apellidos'],
             'RegistroEdad' => 'NULL',
             'RegistroAsisSocial' => 'NULL',
             'RegistroEstabId' => 'NULL',
@@ -57,6 +60,22 @@ class DatabaseMigrator {
 
         return $mappedRow;
     }
+
+    private function separar_nombres($cadena) {
+        $nombres = explode(" ", $cadena);
+        $apellidos = array_slice($nombres, 1);
+        $apellidos = implode(" ", $apellidos);
+        return [
+          "nombre" => $nombres[0],
+          "apellidos" => $apellidos,
+        ];
+      }
+
+      
+
+
+
+
 }
 
 // Uso de la clase
@@ -68,11 +87,10 @@ $destinoDB = new DataTables($pdoD, 'Registro', 'RegistroId');
 
 $migrator = new DatabaseMigrator($origenDB, $destinoDB);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
-?>
 
-/*
 
-<?php */
+
+ /*
 require_once('DataTables.php');
 
 class DatabaseMigrator {
@@ -90,13 +108,19 @@ class DatabaseMigrator {
 
         while ($offset < $totalRecords) {
             $origenData = $this->origenDB->findBatch($batchSize, $offset); // Leer un lote de registros
-
+           // echo $totalRecords;
             foreach ($origenData as $row) {
                 $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
                 $this->destinoDB->save($mappedRow); // Insertar en tabla destino
+            //    echo $offset;
             }
 
             $offset += $batchSize;
+            $progress = array(
+                'transferred' => $offset,
+                'total' => $totalRecords
+            );
+            echo json_encode($progress);
         }
     }
 
@@ -153,7 +177,7 @@ class DatabaseMigrator {
 
 
 }
-
+*/
 // Uso de la clase
 $pdoO = new PDO('mysql:host=200.45.111.99;dbname=MSP_NUTRICION; charset=utf8', 'SiViNSalta', '@#sivin#@salta!%2020&&');
 $pdoD = new PDO('mysql:host=212.1.210.73;dbname=saltaped_sivinsalta; charset=utf8', 'saltaped_sivin', 'sivin7625');
@@ -164,3 +188,4 @@ $destinoDB = new DataTables($pdoD, 'Registro', 'RegistroId');
 $migrator = new DatabaseMigrator($origenDB, $destinoDB);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
 ?>
+/*
