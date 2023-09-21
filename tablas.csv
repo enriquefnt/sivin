@@ -1,0 +1,37 @@
+IdNoti;;;NotificacionId
+ Fecha;; IdNiño;RegistroId
+ Nombre;;;NotificacionFchIns
+ Responsable;;;NotificacionEstaBIns
+ IdNiño;;;NotificacionEdad
+ años;; Fecha;NotificacionFecha
+ meses;;;NotificacionLugAtenc
+ dias;;;NotificacionFchInternac
+ añosr;;;NotificacionDiagIDIntern
+ mesesr;;;NotificacionFchAltaIntern
+ diasr;; Peso;NotificacionPeso
+ AOP;; ZPesoEdad;NotificacionZscorePeso
+ Est_Nom;; Talla;NotificacionTalla
+ Domicilio;; ZTallaEdad;NotificacionZscoreTalla
+ Peso;;;NotificacionIMC
+ Talla;; ZIMCEdad;NotificacionZscoreImc
+ ZPesoEdad;;;NotificacionObsAntrop
+ ZTallaEdad;;;NotificacionDesnutricion
+ ZIMCEdad;;;NotificacionUsuNot
+ MotNom;;;NotificacionFchBaja
+ SevoNom;;;NotificacionUsuBaja
+ SclinNom;;;NotificacionSeClasId
+ Tipo;;;NotificacionSeDxNuId
+ Estado;;;NotificacionSevClasId
+ Ordena;;;NotificacionSevDxNuId
+ Medico;;;NotificacionSgClasId
+ Aoresi;;;NotificacionSgDxNuId
+ NotFin;;;NotificacionDiagObserva
+ IdCtrol;;;Notificacionzpr
+ NotFin;;;Notificacionzpg
+ dias_transcurridos;;;Notificacionzpb
+ retraso;;;Notificacionztr
+ vigilante;;;Notificacionztg
+ Clacificación;;;Notificacionztb
+;;;Notificacionzir
+;;;Notificacionzig
+;;;Notificacionzib
