@@ -15,6 +15,7 @@ class DatabaseMigrator {
 
     public function migrateTable($origenTable, $destinoTable) {
         $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
+        var_dump($origenData); 
         $totalRecords = $this->origenDB->total($origenTable);
         $offset = 0;
         foreach ($origenData as $row) {

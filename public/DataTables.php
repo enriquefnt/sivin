@@ -138,5 +138,9 @@ public function save($record)
 	$this->update($record);
 }
 }
+
+public function getConnection() {
+	return $this->pdo;
+}
 }
 

@@ -14,12 +14,19 @@ class DatabaseMigrator {
            }
 
            public function migrateTable($origenTable, $destinoTable) {
-            $stmt = $this->origenDB->prepare("CALL migraNotCtrl()");
+            try {
+            //$stmt = $this->origenDB->getConnection()->prepare("CALL migraNotCtrl()");
+            //$stmt = $this->origenDB->getConnection()->prepare("CALL migraNotCtrl()");
+            $stmt = $this->origenDB->getConnection()->prepare("SELECT * FROM NotiCtrles;");
             $stmt->execute();
-            
+
             // Obtener los resultados del procedimiento almacenado
             $origenData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+            var_dump($origenData); 
+            }
+            catch (PDOException $e) {
+                echo 'Error en la ejecución del procedimiento almacenado: ' . $e->getMessage();
+            }
             $totalRecords = count($origenData); // Total de registros a procesar
             $offset = 0;
         
@@ -53,21 +60,21 @@ class DatabaseMigrator {
         $mappedRow = array(
             
 'NotificacionId' => 'NULL',
-'RegistroId' => $origenRow[' IdNiño'],
+'RegistroId' => $origenRow['IdNiño'],
 'NotificacionFchIns' =>'NULL',
 'NotificacionEstaBIns' =>'NULL',
 'NotificacionEdad' =>'NULL',
-' NotificacionFecha' => $origenRow[' Fecha'],
+' NotificacionFecha' => $origenRow['Fecha'],
 ' NotificacionLugAtenc' =>'NULL',
 ' NotificacionFchInternac' =>'NULL',
 ' NotificacionDiagIDIntern' =>'NULL',
 ' NotificacionFchAltaIntern' =>'NULL',
-' NotificacionPeso' => $origenRow[' Peso'],
-' NotificacionZscorePeso' => $origenRow[' ZPesoEdad'],
-' NotificacionTalla' => $origenRow[' Talla'],
-' NotificacionZscoreTalla' => $origenRow[' ZTallaEdad'],
+' NotificacionPeso' => $origenRow['Peso'],
+' NotificacionZscorePeso' => $origenRow['ZPesoEdad'],
+' NotificacionTalla' => $origenRow['Talla'],
+' NotificacionZscoreTalla' => $origenRow['ZTallaEdad'],
 ' NotificacionIMC' =>'NULL',
-' NotificacionZscoreImc' => $origenRow[' ZIMCEdad'],
+' NotificacionZscoreImc' => $origenRow['ZIMCEdad'],
 ' NotificacionObsAntrop' =>'NULL',
 ' NotificacionDesnutricion' =>'NULL',
 ' NotificacionUsuNot' =>'NULL',
@@ -88,10 +95,10 @@ class DatabaseMigrator {
 ' Notificacionztb' =>'NULL',
 ' Notificacionzir' =>'NULL',
 ' Notificacionzig' =>'NULL',
-' Notificacionzib' =>'NULL',
+' Notificacionzib' =>'NULL'
 
         );
-
+        var_dump($mappedRow); 
         return $mappedRow;
     }
 
@@ -102,9 +109,6 @@ class DatabaseMigrator {
 
 }
 
-
-
- 
 // Uso de la clase
 
 $pdoO = new PDO('mysql:host=200.45.111.99;dbname=MSP_NUTRICION; charset=utf8', 'SiViNSalta', '@#sivin#@salta!%2020&&');
@@ -116,5 +120,4 @@ $destinoDB = new DataTables($pdoD, 'Notificacion', 'NotificacionId');
 
 $migrator = new DatabaseMigrator($origenDB, $destinoDB);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
-?>
-/*
+
