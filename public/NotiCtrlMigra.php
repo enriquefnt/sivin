@@ -22,7 +22,7 @@ class DatabaseMigrator {
 
             // Obtener los resultados del procedimiento almacenado
             $origenData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            var_dump($origenData); 
+            //var_dump($origenData); 
             }
             catch (PDOException $e) {
                 echo 'Error en la ejecución del procedimiento almacenado: ' . $e->getMessage();
@@ -59,43 +59,43 @@ class DatabaseMigrator {
        
         $mappedRow = array(
             
-'NotificacionId' => 'NULL',
+'NotificacionId' => $origenRow['IdCtrol'],
 'RegistroId' => $origenRow['IdNiño'],
 'NotificacionFchIns' =>'NULL',
 'NotificacionEstaBIns' =>'NULL',
 'NotificacionEdad' =>'NULL',
-' NotificacionFecha' => $origenRow['Fecha'],
-' NotificacionLugAtenc' =>'NULL',
-' NotificacionFchInternac' =>'NULL',
-' NotificacionDiagIDIntern' =>'NULL',
-' NotificacionFchAltaIntern' =>'NULL',
-' NotificacionPeso' => $origenRow['Peso'],
-' NotificacionZscorePeso' => $origenRow['ZPesoEdad'],
-' NotificacionTalla' => $origenRow['Talla'],
-' NotificacionZscoreTalla' => $origenRow['ZTallaEdad'],
-' NotificacionIMC' =>'NULL',
-' NotificacionZscoreImc' => $origenRow['ZIMCEdad'],
-' NotificacionObsAntrop' =>'NULL',
-' NotificacionDesnutricion' =>'NULL',
-' NotificacionUsuNot' =>'NULL',
-' NotificacionFchBaja' =>'NULL',
-' NotificacionUsuBaja' =>'NULL',
-' NotificacionSeClasId' =>'NULL',
-' NotificacionSeDxNuId' =>'NULL',
-' NotificacionSevClasId' =>'NULL',
-' NotificacionSevDxNuId' =>'NULL',
-' NotificacionSgClasId' =>'NULL',
-' NotificacionSgDxNuId' =>'NULL',
-' NotificacionDiagObserva' =>'NULL',
-' Notificacionzpr' =>'NULL',
-' Notificacionzpg' =>'NULL',
-' Notificacionzpb' =>'NULL',
-' Notificacionztr' =>'NULL',
-' Notificacionztg' =>'NULL',
-' Notificacionztb' =>'NULL',
-' Notificacionzir' =>'NULL',
-' Notificacionzig' =>'NULL',
-' Notificacionzib' =>'NULL'
+'NotificacionFecha' => $origenRow['Fecha'],
+'NotificacionLugAtenc' =>'NULL',
+'NotificacionFchInternac' =>'NULL',
+'NotificacionDiagIDIntern' =>'NULL',
+'NotificacionFchAltaIntern' =>'NULL',
+'NotificacionPeso' => $origenRow['Peso'],
+'NotificacionZscorePeso' => $origenRow['ZPesoEdad'],
+'NotificacionTalla' => $origenRow['Talla'],
+'NotificacionZscoreTalla' => $origenRow['ZTallaEdad'],
+'NotificacionIMC' =>'NULL',
+'NotificacionZscoreImc' => $origenRow['ZIMCEdad'],
+'NotificacionObsAntrop' =>'NULL',
+'NotificacionDesnutricion' =>'NULL',
+'NotificacionUsuNot' =>'NULL',
+'NotificacionFchBaja' =>'NULL',
+'NotificacionUsuBaja' =>'NULL',
+'NotificacionSeClasId' =>'NULL',
+'NotificacionSeDxNuId' =>'NULL',
+'NotificacionSevClasId' =>'NULL',
+'NotificacionSevDxNuId' =>'NULL',
+'NotificacionSgClasId' =>'NULL',
+'NotificacionSgDxNuId' =>'NULL',
+'NotificacionDiagObserva' =>'NULL',
+'Notificacionzpr' =>'NULL',
+'Notificacionzpg' =>'NULL',
+'Notificacionzpb' =>'NULL',
+'Notificacionztr' =>'NULL',
+'Notificacionztg' =>'NULL',
+'Notificacionztb' =>'NULL',
+'Notificacionzir' =>'NULL',
+'Notificacionzig' =>'NULL',
+'Notificacionzib' =>'NULL'
 
         );
         var_dump($mappedRow); 
