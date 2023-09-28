@@ -16,16 +16,14 @@ class DatabaseMigrator {
          }
   
 
-  public function migrateTable($origenTable, $destinoTable) {
-    $origenData = $this->origenDB->findAll($origenTable);
-    $totalRecords = $this->origenDB->total($origenTable);
-    $offset = 0;
-
-    foreach ($origenData as $row) {
-      $mappedRow = $this->mapColumns($row);
-      //var_dump($row); 
-      $this->destinoDB->save($mappedRow);
-      
+         public function migrateTable($origenTable, $destinoTable) {
+          $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
+       //   var_dump($origenData); 
+          $totalRecords = $this->origenDB->total($origenTable);
+          $offset = 0;
+          foreach ($origenData as $row) {
+              $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
+              $this->destinoDB->save($mappedRow); // Insertar en tabla destino
       $offset++;
       $progress = ($offset / $totalRecords) * 100;
 
@@ -37,26 +35,27 @@ class DatabaseMigrator {
       flush();
     }
   }
-  private function mapColumns($row) {
-    var_dump($row); 
+  
+  
+  private function mapColumns($origenRow) {
     // Aquí defines el mapeo de nombres de columnas entre las tablas origen y destino.
     // Por ejemplo, si la tabla origen tiene 'nombre' y la tabla destino espera 'nombre_completo':
-    if ($row['Sexo']=="Femenino"){$row['Sexo']=2;} else{$row['Sexo']=1;};
-    $apenom = $this->separar_nombres($row['ApeNom']);
-    $residencia = $this->domicilio->findById($row['IdNiño']);
+    if ( $origenRow['Sexo']=="Femenino"){$origenRow['Sexo']=2;} else{$origenRow['Sexo']=1;};
+    $apenom = $this->separar_nombres($origenRow['ApeNom']);
+    $residencia = $this->domicilio->findById($origenRow['IdNiño']);
     $mappedRow = array(
-        'RegistroId' => $row['IdNiño'],
-        'RegistroAoResidId' => $row['Aoresi'],
-        'RegistroNomCompleto' => $row['ApeNom'],
-        'RegistroNroDocumento' => $row['Dni'],
-        'RegistroFecha' => $row['FechaCapta'],
-        'RegistroFchNac' => $row['FechaNto'],
-        'RegistroPeso' => $row['Peso'],
-        'RegistroSemGestacion' => $row['Semanas'],
-        'SexoId' => $row['Sexo'],
-        'RegistroTalla' => $row['Talla'],
-        'EtniaId' => $row['TpoEtnia'],
-        'RegistroUsuCarga' => $row['UsuId'],
+        'RegistroId' => $origenRow['IdNiño'],
+        'RegistroAoResidId' => $origenRow['Aoresi'],
+        'RegistroNomCompleto' => $origenRow['ApeNom'],
+        'RegistroNroDocumento' => $origenRow['Dni'],
+        'RegistroFecha' => $origenRow['FechaCapta'],
+        'RegistroFchNac' => $origenRow['FechaNto'],
+        'RegistroPeso' => $origenRow['Peso'],
+        'RegistroSemGestacion' => $origenRow['Semanas'],
+        'SexoId' => $origenRow['Sexo'],
+        'RegistroTalla' => $origenRow['Talla'],
+        'EtniaId' => $origenRow['TpoEtnia'],
+        'RegistroUsuCarga' => $origenRow['UsuId'],
         'RegistroFchIns' => 'NULL',
         'MotivoCargaId' => 'NULL',
         'RegistroApellidos' => $apenom['apellido'],
@@ -73,12 +72,12 @@ class DatabaseMigrator {
         'RegistroEstaCierre' => 'NULL',
         'RegistroDomicilio' => $residencia['ResiDire'],
         'RegistroLocalidad' => $residencia['ResiLocal']
-  
+
         // Agrega más mapeos de columnas aquí
     );
-  
+
     return $mappedRow;
-  }
+}
   
       private function separar_nombres($cadena) {
           $apenom_array = explode(" ", $cadena);
