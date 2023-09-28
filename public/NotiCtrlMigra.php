@@ -16,13 +16,13 @@ class DatabaseMigrator {
            public function migrateTable($origenTable, $destinoTable) {
             try {
             //$stmt = $this->origenDB->getConnection()->prepare("CALL migraNotCtrl()");
-            //$stmt = $this->origenDB->getConnection()->prepare("CALL migraNotCtrl()");
-            $stmt = $this->origenDB->getConnection()->prepare("SELECT * FROM NotiCtrles;");
+            $stmt = $this->origenDB->getConnection()->prepare("CALL migraNotCtrl()");
+            //$stmt = $this->origenDB->getConnection()->prepare("SELECT * FROM NotiCtrles;");
             $stmt->execute();
 
             // Obtener los resultados del procedimiento almacenado
             $origenData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            //var_dump($origenData); 
+            var_dump($origenData); 
             }
             catch (PDOException $e) {
                 echo 'Error en la ejecución del procedimiento almacenado: ' . $e->getMessage();
@@ -43,9 +43,12 @@ class DatabaseMigrator {
                 echo('<p>Progreso: ' . number_format($progress, 2) . '%</p>');
                 
                 // Flushear el búfer de salida para enviar la información al navegador inmediatamente
+                ob_start();
                 ob_flush();
+               
                 flush();
-        
+                ob_end_flush();
+
                 // Pausa de 1 segundo para controlar la velocidad de actualización
                 sleep(1);
             }
@@ -98,7 +101,7 @@ class DatabaseMigrator {
 'Notificacionzib' =>'NULL'
 
         );
-        var_dump($mappedRow); 
+      //  var_dump($mappedRow); 
         return $mappedRow;
     }
 
