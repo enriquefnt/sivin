@@ -113,4 +113,4 @@ $domicilio = new DataTables($pdoO, 'NIÑORESIDENCIA', 'ResiNiño');
 $migrator = new DatabaseMigrator($origenDB, $destinoDB, $domicilio);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
 ?>
-/*
+
