@@ -17,13 +17,14 @@ class DatabaseMigrator {
 
          public function migrateTable($origenTable, $destinoTable) {
           $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
-       //   var_dump($origenData); 
+      
           $totalRecords = $this->origenDB->total($origenTable);
           $offset = 0;
           foreach ($origenData as $row) {
-            var_dump($row);
+       ob_start();
               $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
               $this->destinoDB->save($mappedRow); // Insertar en tabla destino
+    
       $offset++;
       $progress = ($offset / $totalRecords) * 100;
 
@@ -35,7 +36,28 @@ class DatabaseMigrator {
       flush();
     }
   }
-  
+/*
+  public function migrateTable($origenTable, $destinoTable) {
+    $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
+    $totalRecords = $this->origenDB->total($origenTable);
+    $offset = 0;
+
+    foreach ($origenData as $row) {
+        $mappedRow = $this->mapColumns($row); // Mapear nombres de columnas
+        $this->destinoDB->save($mappedRow); // Insertar en tabla destino
+        $offset++;
+
+        // Calcular el porcentaje de progreso
+        $progress = ($offset / $totalRecords) * 100;
+
+        // Enviar el progreso como respuesta AJAX
+        echo json_encode(['progress' => $progress]);
+
+        // Pausa de 1 segundo para controlar la velocidad de actualización
+        sleep(1);
+    }
+} */
+
   
   private function mapColumns($origenRow) {
     // Aquí defines el mapeo de nombres de columnas entre las tablas origen y destino.
@@ -97,8 +119,8 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
   $pdoO = new PDO('mysql:host=200.45.111.99;dbname=MSP_NUTRICION; charset=utf8', 'SiViNSalta', '@#sivin#@salta!%2020&&');
   $pdoD = new PDO('mysql:host=212.1.210.73;dbname=saltaped_sivinsalta; charset=utf8', 'saltaped_sivin', 'sivin7625');
 
-  $origenDB = new DataTables($pdoO, 'NotiCtrles', 'IdCtrol');
-  $destinoDB = new DataTables($pdoD, 'Notificacion', 'NotificacionId');
+  $origenDB = new DataTables($pdoO, 'NIÑOS', 'IdNiño');
+  $destinoDB = new DataTables($pdoD, 'Registro', 'RegistroId');
   $domicilio = new DataTables($pdoO, 'NIÑORESIDENCIA', 'ResiNiño');
 
   $migrator = new DatabaseMigrator($origenDB, $destinoDB, $domicilio);

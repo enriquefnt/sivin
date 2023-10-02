@@ -1,4 +1,3 @@
-<!-- index.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,34 +11,41 @@
 <body>
   <h4>Migra tablas</h4>
 
-  <form id="migrateForm">
+  <!-- <form id="migrateForm">
     <input type="submit" name="ejecutar_metodo" value="Migrar Registros">
-  </form>
-
+  </form> -->
+ 
+  <form id="migrateForm">
+    <button type="button" name="ejecutar_metodo">Migrar Registros</button>
+</form>
   <div id="progress"></div>
 
+ 
   <script>
-    document.getElementById('migrateForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      // Realizar la migración con AJAX
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'SiviMigra.php', true);
-
-      // Establecer el encabezado para indicar que es una solicitud AJAX
-      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-      // Escuchar eventos de cambio de estado
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          // Actualizar el progreso en la interfaz
-          document.getElementById('progress').innerHTML = xhr.responseText;
-        }
-      };
-
-      // Enviar la solicitud
-      xhr.send();
-    });
+      $(document).ready(function() {
+          $('#migrateForm').submit(function(event) {
+              event.preventDefault();
+  
+              // Realizar la migración con AJAX
+              $.ajax({
+                  url: 'SiviMigra.php',
+                  method: 'POST',
+                  dataType: 'json',
+                  success: function(response) {
+                      // Actualizar el progreso en la interfaz
+                      $('#progress').html('Progreso: ' + response.progress.toFixed(2) + '%');
+                  },
+                  error: function() {
+                      // Manejar errores si es necesario
+                  }
+              });
+          });
+      });
   </script>
+  
+
+
+
+
 </body>
 </html>
