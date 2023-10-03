@@ -2,7 +2,6 @@
 require_once('DataTables.php');
 
 class DatabaseMigrator {
-  
   private $origenDB;
   private $destinoDB;
   private $domicilio;
@@ -14,10 +13,8 @@ class DatabaseMigrator {
       $this->domicilio = $domicilio;
          }
   
-
          public function migrateTable($origenTable, $destinoTable) {
           $origenData = $this->origenDB->findAll($origenTable); // Leer datos de la tabla origen
-      
           $totalRecords = $this->origenDB->total($origenTable);
           $offset = 0;
           foreach ($origenData as $row) {
@@ -34,6 +31,8 @@ class DatabaseMigrator {
       // Flushear el búfer de salida para enviar la información al navegador inmediatamente
       ob_flush();
       flush();
+      // Pausa de 1 segundo para controlar la velocidad de actualización
+      sleep(1);
     }
   }
 /*
@@ -114,8 +113,8 @@ class DatabaseMigrator {
     }
 
 
-// Instanciar y ejecutar la migración si es una solicitud AJAX
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+//00 Instanciar y ejecutar la migración si es una solicitud AJAX
+//if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
   $pdoO = new PDO('mysql:host=200.45.111.99;dbname=MSP_NUTRICION; charset=utf8', 'SiViNSalta', '@#sivin#@salta!%2020&&');
   $pdoD = new PDO('mysql:host=212.1.210.73;dbname=saltaped_sivinsalta; charset=utf8', 'saltaped_sivin', 'sivin7625');
 
@@ -126,6 +125,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
   $migrator = new DatabaseMigrator($origenDB, $destinoDB, $domicilio);
   $migrator->migrateTable('tabla_origen', 'tabla_destino');
   exit; // Detener la ejecución después de la migración
-}
+//}
 ?>
 
