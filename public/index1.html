@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Migración de Datos</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>Progreso de Migración</h1>
+    <div id="progress-bar">
+        <div id="progress" style="width: 0;"></div>
+    </div>
+    <button id="start-button">Iniciar</button>
+    <button id="pause-button">Pausar</button>
+    <button id="stop-button">Detener</button>
+
+    <script>
+        $(document).ready(function() {
+            const progressBar = $("#progress");
+            const startButton = $("#start-button");
+            const pauseButton = $("#pause-button");
+            const stopButton = $("#stop-button");
+
+            let paused = false;
+            let stopped = false;
+
+            function updateProgress(progress) {
+                progressBar.width(progress + "%");
+            }
+
+            startButton.click(function() {
+                // Evitar iniciar múltiples veces
+                startButton.prop("disabled", true);
+
+                let offset = 0;
+                let totalRecords = 100;
+
+                function migrateData() {
+                    if (stopped) {
+                        // Habilitar el botón de inicio si se detiene
+                        startButton.prop("disabled", false);
+                        return;
+                    }
+
+                    if (!paused) {
+                      //  $.get("migracion.php", { offset: offset, batchSize: 100 }, function(response) {
+                        $.get("migracion.php", { offset: offset }, function(response) {
+                            const data = JSON.parse(response);
+                            offset = data.offset;
+                            const progress = (offset / totalRecords) * 100;
+                            updateProgress(progress);
+
+                            if (offset < totalRecords) {
+                                migrateData();
+                            } else {
+                                alert("Migración completada.");
+                                // Habilitar el botón de inicio al completar la migración
+                                startButton.prop("disabled", false);
+                            }
+                        });
+                    } else {
+                        setTimeout(migrateData, 100);
+                    }
+                }
+
+                migrateData();
+            });
+
+            pauseButton.click(function() {
+                paused = !paused;
+                pauseButton.text(paused ? "Reanudar" : "Pausar");
+            });
+
+            stopButton.click(function() {
+                stopped = true;
+                // Habilitar el botón de inicio si se detiene
+                startButton.prop("disabled", false);
+            });
+        });
+    </script>
+</body>
+</html>
