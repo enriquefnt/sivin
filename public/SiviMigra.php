@@ -2,13 +2,17 @@
 require_once('DataTables.php');
 
 class DatabaseMigrator {
-    private $origenDB;
-    private $destinoDB;
-    
-    public function __construct($origenDB, $destinoDB) {
-        $this->origenDB = $origenDB;
-        $this->destinoDB = $destinoDB;
-    }
+  
+  private $origenDB;
+  private $destinoDB;
+  private $domicilio;
+  
+  public function __construct(DataTables $origenDB,DataTables $destinoDB, DataTables $domicilio) {
+   
+      $this->origenDB = $origenDB;
+      $this->destinoDB = $destinoDB;
+      $this->domicilio = $domicilio;
+         }
 
     public function migrateTable($origenTable, $destinoTable, $batchSize = 100) {
         $totalRecords = $this->origenDB->total($origenTable);
@@ -27,46 +31,46 @@ class DatabaseMigrator {
     }
 
     private function mapColumns($origenRow) {
-        // Mapeo de nombres de columnas
-        $mappedRow = array(
-            'RegistroId' => $origenRow['IdNiño'],
-            'RegistroAoResidId' => $origenRow['Aoresi'],
-            'RegistroNomCompleto' => $origenRow['ApeNom'],
-            'RegistroNroDocumento' => $origenRow['Dni'],
-            'RegistroFecha' => $origenRow['FechaCapta'],
-            'RegistroFchNac' => $origenRow['FechaNto'],
-            'RegistroPeso' => $origenRow['Peso'],
-            'RegistroSemGestacion' => $origenRow['Semanas'],
-            'SexoId' => $origenRow['Sexo'],
-            'RegistroTalla' => $origenRow['Talla'],
-            'EtniaId' => $origenRow['TpoEtnia'],
-            'RegistroUsuCarga' => $origenRow['UsuId'],
-            'RegistroFchIns' => 'NULL',
-            'MotivoCargaId' => 'NULL',
-            'RegistroApellidos' => 'NULL',
-            'RegistroNombres' => 'NULL',
-            'RegistroEdad' => 'NULL',
-            'RegistroAsisSocial' => 'NULL',
-            'RegistroEstabId' => 'NULL',
-            'RegistroSector' => 'NULL',
-            'RegistroFchBaja' => 'NULL',
-            'RegistroUsuBaja' => 'NULL',
-            'RegistroFchCierre' => 'NULL',
-            'RegistroMotcierre' => 'NULL',
-            'RegistroUsuCierre' => 'NULL',
-            'RegistroEstaCierre' => 'NULL',
-            'RegistroDomicilio' => 'NULL',
-            'RegistroLocalidad' => 'NULL'
-
-            // columnas aquí
-        );
-
-
-       
-
-        return $mappedRow;
-    }
-
+      // Aquí defines el mapeo de nombres de columnas entre las tablas origen y destino.
+      // Por ejemplo, si la tabla origen tiene 'nombre' y la tabla destino espera 'nombre_completo':
+      if ( $origenRow['Sexo']=="Femenino"){$origenRow['Sexo']=2;} else{$origenRow['Sexo']=1;};
+      $apenom = $this->separar_nombres($origenRow['ApeNom']);
+      $residencia = $this->domicilio->findById($origenRow['IdNiño']);
+      $mappedRow = array(
+          'RegistroId' => $origenRow['IdNiño'],
+          'RegistroAoResidId' => $origenRow['Aoresi'],
+          'RegistroNomCompleto' => $origenRow['ApeNom'],
+          'RegistroNroDocumento' => $origenRow['Dni'],
+          'RegistroFecha' => $origenRow['FechaCapta'],
+          'RegistroFchNac' => $origenRow['FechaNto'],
+          'RegistroPeso' => $origenRow['Peso'],
+          'RegistroSemGestacion' => $origenRow['Semanas'],
+          'SexoId' => $origenRow['Sexo'],
+          'RegistroTalla' => $origenRow['Talla'],
+          'EtniaId' => $origenRow['TpoEtnia'],
+          'RegistroUsuCarga' => $origenRow['UsuId'],
+          'RegistroFchIns' => 'NULL',
+          'MotivoCargaId' => 'NULL',
+          'RegistroApellidos' => $apenom['apellido'],
+          'RegistroNombres' => $apenom['nombres'],
+          'RegistroEdad' => 'NULL',
+          'RegistroAsisSocial' => 'NULL',
+          'RegistroEstabId' => 'NULL',
+          'RegistroSector' => 'NULL',
+          'RegistroFchBaja' => 'NULL',
+          'RegistroUsuBaja' => 'NULL',
+          'RegistroFchCierre' => 'NULL',
+          'RegistroMotcierre' => 'NULL',
+          'RegistroUsuCierre' => 'NULL',
+          'RegistroEstaCierre' => 'NULL',
+          'RegistroDomicilio' => $residencia['ResiDire'],
+          'RegistroLocalidad' => $residencia['ResiLocal']
+  
+          // Agrega más mapeos de columnas aquí
+      );
+  
+      return $mappedRow;
+  }
     private function separar_nombres($cadena) {
         $nombres = explode(" ", $cadena);
         $apellidos = array_slice($nombres, 1);
@@ -87,6 +91,8 @@ $pdoD = new PDO('mysql:host=212.1.210.73;dbname=saltaped_sivinsalta; charset=utf
 $origenDB = new DataTables($pdoO, 'NIÑOS', 'IdNiño');
 $destinoDB = new DataTables($pdoD, 'Registro', 'RegistroId');
 
-$migrator = new DatabaseMigrator($origenDB, $destinoDB);
+$domicilio = new DataTables($pdoO, 'NIÑORESIDENCIA', 'ResiNiño');
+
+$migrator = new DatabaseMigrator($origenDB, $destinoDB, $domicilio);
 $migrator->migrateTable('tabla_origen', 'tabla_destino');
 ?>
