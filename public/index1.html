@@ -15,17 +15,21 @@
     <button id="stop-button">Detener</button>
 
     <script>
+        let progressBar; 
         $(document).ready(function() {
-            const progressBar = $("#progress");
+            progressBar = $("#progress");
             const startButton = $("#start-button");
             const pauseButton = $("#pause-button");
             const stopButton = $("#stop-button");
 
             let paused = false;
             let stopped = false;
+            
 
             function updateProgress(progress) {
                 progressBar.width(progress + "%");
+                const progressBar = $("#progress");
+                console.log(progressBar);  // Añade esto para verificar la selección
             }
 
             startButton.click(function() {
