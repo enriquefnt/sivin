@@ -15,21 +15,17 @@
     <button id="stop-button">Detener</button>
 
     <script>
-        let progressBar; 
         $(document).ready(function() {
-            progressBar = $("#progress");
+            const progressBar = $("#progress");
             const startButton = $("#start-button");
             const pauseButton = $("#pause-button");
             const stopButton = $("#stop-button");
 
             let paused = false;
             let stopped = false;
-            
 
             function updateProgress(progress) {
                 progressBar.width(progress + "%");
-                const progressBar = $("#progress");
-                console.log(progressBar);  // Añade esto para verificar la selección
             }
 
             startButton.click(function() {
@@ -37,7 +33,7 @@
                 startButton.prop("disabled", true);
 
                 let offset = 0;
-                let totalRecords = 5400;
+                let totalRecords = 10000;
 
                 function migrateData() {
                     if (stopped) {
@@ -47,8 +43,8 @@
                     }
 
                     if (!paused) {
-                      //  $.get("migracion.php", { offset: offset, batchSize: 100 }, function(response) {
-                        $.get("migracion.php", { offset: offset }, function(response) {
+                     $.get("migracion.php", { offset: offset, batchSize: 100 }, function(response) {
+                     //   $.get("migracion.php", { offset: offset }, function(response) {
                             const data = JSON.parse(response);
                             offset = data.offset;
                             const progress = (offset / totalRecords) * 100;
