@@ -22,7 +22,7 @@ class DatabaseMigrator {
 
             // Obtener los resultados del procedimiento almacenado
             $origenData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            var_dump($origenData); 
+            //var_dump($origenData); 
             }
             catch (PDOException $e) {
                 echo 'Error en la ejecución del procedimiento almacenado: ' . $e->getMessage();
